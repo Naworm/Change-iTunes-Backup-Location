@@ -9,9 +9,9 @@ iTunes : `"%APPDATA%\Apple Computer\MobileSync\Backup"`
 
 Microsoft Store iTunes : `"%HOMEPATH%\Apple\MobileSync\Backup"`
 
-So here you got script to change this location quickly and easily
+So here you got script to change this location quickly and easily.
 
 * Script must be run as administrator (symbolic link bug)
-* It will create a symbolic link to `"E:\Backups\iPhone Backups"`
+* It will create a symbolic link to `"E:\Backups\iPhone Backups"` (you may need to change it)
 
 Enjoy making backups ;)
