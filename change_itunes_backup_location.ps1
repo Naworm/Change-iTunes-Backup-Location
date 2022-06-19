@@ -13,10 +13,38 @@ else {
     Set-Variable -Name "bkp_old_base_path" -Value ($env:APPDATA + "\Apple Computer")
 }
 
-Set-Variable -Name "bkp_old_base_path" -Value ($env:HOMEDRIVE + ${env:HOMEPATH} + "\Apple")
 Set-Variable -Name "bkp_old_short_path" -Value ($bkp_old_base_path + "\MobileSync")
 Set-Variable -Name "bkp_old_path" -Value ($bkp_old_short_path + "\Backup")
 
+
+# Checking if Itunes is running and prevent continue
+
+# get iTunes process
+$iTunes = Get-Process "iTunes" -ErrorAction SilentlyContinue
+if ($iTunes) {
+    # try gracefully first
+    Write-Output "iTunes is running, closing properly" 
+    $iTunes.CloseMainWindow()
+    # kill after five seconds
+    Start-Sleep 5
+    if (!$iTunes.HasExited) {
+        Write-Output "iTunes is still running, stopping script"
+        Exit
+        #Stop-Process -processname "iTunes"
+    }
+}
+
+function Test-ReparsePoint([string]$path) {
+    $file = Get-Item $path -Force -ea SilentlyContinue
+    return [bool]($file.Attributes -band [IO.FileAttributes]::ReparsePoint)
+}
+  
+if (Test-ReparsePoint($bkp_old_path)) {
+    if ((Get-Item $bkp_old_path | Select-Object -ExpandProperty Target) -eq $bkp_new_path) {
+        Write-Output "Backup folder already migrated"
+        Exit
+    }
+}
 
 
 if (!(Test-Path $bkp_old_base_path)) {
