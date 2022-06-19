@@ -1,10 +1,10 @@
 <# Import-Module Appx
 Get-AppxPackage -Name "AppleInc.iTunes" #>
 
-Set-Variable -Name "bkp_new_path" -Value "E:\Backups\iPhone Backups"
+Set-Variable -Name "bkp_new_path" -Value "D:\Backups\iPhone Backups"
 
 $software = "iTunes"
-$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
+$installed = $null -ne (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -eq $software })
 
 if (-Not $installed) {
     Set-Variable -Name "bkp_old_base_path" -Value ($env:HOMEDRIVE + ${env:HOMEPATH} + "\Apple")
